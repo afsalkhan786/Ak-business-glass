@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pitch Your Idea</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Pitch Your Startup</h1>
+
+<textarea id="pitch" placeholder="Describe your startup idea..."></textarea>
+
+<br>
+
+<button onclick="sendPitch()">Pitch to AI Investor</button>
+
+<div id="response"></div>
+
+<script>
+
+async function sendPitch(){
+
+let pitch = document.getElementById("pitch").value;
+
+let response = await fetch("https://openrouter.ai/api/v1/chat/completions",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer  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"
+},
+
+ body:JSON.stringify({
+
+model:"openai/gpt-3.5-turbo",
+
+messages:[
+{
+role:"system",
+content:"You are a startup investor like Shark Tank. Listen to the student's pitch and ask smart investor questions and give feedback with a rating out of 10."
+},
+
+{
+role:"user",
+content:pitch
+}
+
+]
+
+})
+
+});
+
+let data = await response.json();
+
+document.getElementById("response").innerText =
+data.choices[0].message.content;
+
+}
+
+</script>
+
+</body>
+</html>
